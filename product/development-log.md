@@ -1,5 +1,26 @@
 # xtuer-zhou 开发文档 / 变更日志
 
+## 2026-07-16 推送 GitHub 首版完成
+
+### 用户输入
+
+- 用户要求先推送到 GitHub，并提供远程仓库 `https://github.com/qing99half/xtuer-zhou.git`。
+
+### 本次执行
+
+- 已初始化本地 Git 仓库。
+- 已创建 `.gitignore`，排除 `node_modules/`、`.next/`、环境文件和原始 `.docx` 等不应提交内容。
+- 已按用户确认，不包含原始腾讯文档导出 `.docx`。
+- 已设置本仓库 Git 提交身份：`qing99half <a13165566223@163.com>`。
+- 已完成首版提交：`6863853 feat: initialize xtuer zhou knowledge base`。
+- 已添加远程仓库并推送到 GitHub。
+- 由于远程仓库已有初始化提交，用户选择使用 `--force` 覆盖远程 main 分支。
+- 当前本地 `main` 已跟踪 `origin/main`，状态干净。
+
+### 当前状态
+
+项目首版已经推送到 GitHub：`https://github.com/qing99half/xtuer-zhou`。当前仍处于内容扩充与检索质量优化阶段，后续开发应继续小步迭代，避免代码和资料臃肿。
+
 ## 2026-07-16 轻量开发约束与进度汇报规则确认
 
 ### 用户输入

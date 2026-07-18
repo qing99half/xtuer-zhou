@@ -26,6 +26,29 @@ function parseFrontmatter(raw) {
     }, {});
 }
 
+function parseArrayField(raw) {
+  const trimmed = (raw || "").trim();
+  if (!trimmed) return [];
+  const body = trimmed.startsWith("[") && trimmed.endsWith("]") ? trimmed.slice(1, -1) : trimmed;
+  return body
+    .split(",")
+    .map((item) => item.trim().replace(/^["']|["']$/g, ""))
+    .filter(Boolean);
+}
+
+function stripInlineMarkdown(text) {
+  return text
+    .replace(/!\[[^\]]*\]\([^)]*\)/g, "")
+    .replace(/\[([^\]]+)\]\([^)]*\)/g, "$1")
+    .replace(/\*\*([^*]+)\*\*/g, "$1")
+    .replace(/__([^_]+)__/g, "$1")
+    .replace(/(^|[^*])\*([^*\n]+)\*/g, "$1$2")
+    .replace(/(^|[^_])_([^_\n]+)_/g, "$1$2")
+    .replace(/`([^`]+)`/g, "$1")
+    .replace(/~~([^~]+)~~/g, "$1")
+    .trim();
+}
+
 function stripFrontmatter(raw) {
   if (!raw.startsWith("---")) return raw;
   const end = raw.indexOf("\n---", 3);
@@ -59,7 +82,7 @@ function splitIntoChunks(content) {
         chunks.push({ heading: currentHeading, text: buffer.join("\n") });
         buffer = [];
       }
-      currentHeading = line.replace(/^#+\s*/, "");
+      currentHeading = stripInlineMarkdown(line.replace(/^#+\s*/, ""));
       continue;
     }
 
@@ -84,15 +107,27 @@ const documents = files.flatMap((filePath) => {
   if (meta.status !== "已审核" || meta.indexable === "false") return [];
 
   const relativePath = path.relative(ROOT, filePath).replaceAll("\\", "/");
+  if (relativePath.startsWith("docs/_shared/") || relativePath.startsWith("docs/99-")) return [];
   const content = stripFrontmatter(raw);
+  const primarySection = meta.primarySection || relativePath.split("/")[1] || "misc";
+  const sectionsField = parseArrayField(meta.sections);
+  const sections = sectionsField.length > 0
+    ? Array.from(new Set([primarySection, ...sectionsField]))
+    : [primarySection];
+  const phase = parseArrayField(meta.phase);
+  const tags = parseArrayField(meta.tags);
 
   return splitIntoChunks(content).map((chunk, index) => ({
     id: `${relativePath}#${index + 1}`,
     title: meta.title || path.basename(filePath, ".md"),
-    category: meta.category || relativePath.split("/")[1] || "未分类",
+    category: meta.category || primarySection,
     source: meta.source || "待补充来源",
     updatedAt: meta.updatedAt || "待更新",
     path: relativePath,
+    primarySection,
+    sections,
+    phase,
+    tags,
     heading: chunk.heading,
     text: chunk.text,
   }));

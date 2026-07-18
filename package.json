@@ -8,7 +8,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "rag:index": "node scripts/build-rag-index.mjs"
+    "rag:index": "node scripts/build-rag-index.mjs",
+    "check:links": "node scripts/check-links.mjs"
   },
   "dependencies": {
     "next": "15.5.7",

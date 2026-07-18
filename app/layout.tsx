@@ -24,17 +24,23 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
                   首页
                 </Link>
                 <Link className="nav-link" href="/guide">
-                  入学指南
+                  新生指南
                 </Link>
                 <Link className="nav-link" href="/library">
                   资料库
+                </Link>
+                <Link className="nav-link" href="/qa">
+                  常见问答
+                </Link>
+                <Link className="nav-link" href="/about">
+                  关于 &amp; 反诈
                 </Link>
               </nav>
               <ContactDialog />
             </div>
           </header>
           <main className="site-main">{children}</main>
-          <footer className="footer">资料需审核后入库，AI 回答必须引用来源。© xtuer-zhou</footer>
+          <footer className="footer">内容整理自 2026 新生攻略，重要事项请以学校官方通知为准。© xtuer-zhou</footer>
         </div>
       </body>
     </html>

@@ -1,6 +1,8 @@
 "use client";
 
 import { FormEvent, useState } from "react";
+import Link from "next/link";
+import { getSourceDocumentHref } from "@/lib/routes";
 
 type Source = {
   id: string;
@@ -19,8 +21,15 @@ type AskResponse = {
   sources: Source[];
 };
 
+function sourceHref(source: Source) {
+  const baseHref = getSourceDocumentHref(source.path);
+  const highlight = encodeURIComponent(source.text.slice(0, 80));
+  const heading = encodeURIComponent(source.heading);
+  return `${baseHref}?highlight=${highlight}#${heading}`;
+}
+
 export function AskPanel() {
-  const examples = ["新生群是什么？", "学在湘大有哪些内容？", "校园生活包括什么？"];
+  const examples = ["新生群是什么？", "报到前要准备什么？", "校园生活有哪些常用工具？"];
   const [question, setQuestion] = useState("");
   const [result, setResult] = useState<AskResponse | null>(null);
   const [loading, setLoading] = useState(false);
@@ -55,13 +64,13 @@ export function AskPanel() {
 
   return (
     <aside className="ask-box card">
-      <span className="status-pill">本地 RAG · 已接入</span>
-      <h2>先问一个新生问题</h2>
+      <span className="status-pill">智能问答助手</span>
+      <h2>新生问题先问这里</h2>
       <form className="ask-form" onSubmit={handleSubmit}>
         <input
           className="ask-input"
           onChange={(event) => setQuestion(event.target.value)}
-          placeholder="例如：新生群是什么？选课有哪些主题？"
+          placeholder="例如：新生群是什么？报到前要准备什么？"
           value={question}
         />
         <button className="primary-button" disabled={loading} type="submit">
@@ -75,25 +84,29 @@ export function AskPanel() {
           </button>
         ))}
       </div>
-      <p>当前只基于已审核资料进行关键词检索；资料不足时不会编造答案。</p>
+      <p>答案会优先参考已整理的新生攻略内容。找不到时，会提醒你去加群咨询。</p>
       {error ? <p className="error-text">{error}</p> : null}
       {result ? (
         <section className="answer-panel">
           <span className={result.covered ? "status-pill" : "eyebrow"}>
-            {result.covered ? "找到相关资料" : "资料暂未覆盖"}
+            {result.covered ? "找到相关指南" : "暂时没找到"}
           </span>
           <pre>{result.answer}</pre>
           {result.sources.length > 0 ? (
             <div className="source-list">
-              <h3>引用来源</h3>
-              {result.sources.map((source) => (
+              <div className="source-heading">
+                <h3>参考内容</h3>
+                <span>{result.sources.length} 条相关指南</span>
+              </div>
+              {result.sources.map((source, index) => (
                 <article className="source-card" key={source.id}>
-                  <a href={`/library/${source.path.replace(/^docs\//, "").replace(/\.md$/, "")}?highlight=${encodeURIComponent(source.text.slice(0, 80))}#${encodeURIComponent(source.heading)}`}>
-                    <strong>{source.title}</strong>
-                  </a>
+                  <Link href={sourceHref(source)}>
+                    <strong>{index + 1}. {source.title}</strong>
+                  </Link>
                   <span>{source.heading}</span>
+                  <p>{source.text.replace(/\s+/g, " ").slice(0, 120)}{source.text.length > 120 ? "…" : ""}</p>
                   <small>
-                    {source.path} · {source.updatedAt} · {source.source}
+                    {source.updatedAt} · {source.source}
                   </small>
                 </article>
               ))}

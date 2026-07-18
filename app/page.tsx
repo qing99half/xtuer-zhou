@@ -1,24 +1,55 @@
 import Link from "next/link";
 import { AskPanel } from "@/components/ask-panel";
-import { contacts, guideModules } from "@/lib/site-data";
+import { cleanExcerpt } from "@/lib/display";
+import {
+  getApprovedMarkdownDocuments,
+  getDocumentsByPhase,
+  getDocumentsByPrimarySection,
+} from "@/lib/markdown";
+import { getDocumentHref, getPhaseHref, getSectionHref } from "@/lib/routes";
+import { contacts, phases, sections } from "@/lib/site-data";
 
 export default function HomePage() {
+  const qaDocs = getApprovedMarkdownDocuments()
+    .filter(
+      (doc) =>
+        doc.tags.includes("Q&A") ||
+        doc.title.includes("Q&A") ||
+        doc.title.includes("QA"),
+    )
+    .slice(0, 4);
+
+  const contactCards = contacts.slice(0, 3);
+
   return (
     <>
+      <Link className="fraud-banner" href="/about#anti-fraud">
+        <span className="fraud-banner-tag">反诈提醒</span>
+        <span className="fraud-banner-text">
+          开学季骗子密集：自称 “校领导 / 辅导员 / 学姐” 不主动证明身份的一律警惕，出门在外有事找警察。
+        </span>
+        <span className="fraud-banner-cta">查看反诈提醒 →</span>
+      </Link>
+
       <section className="hero">
         <div>
           <span className="eyebrow">湘潭大学 2026 新生攻略</span>
-          <h1>把入学第一周的关键问题，一次讲清楚。</h1>
+          <h1>把入学第一年的关键问题，一次讲清楚。</h1>
           <p>
-            面向新生的学习文档知识库：先完成报到、宿舍、军训、学习入门四条主线，再逐步升级为有引用来源的 AI 问答库。
+            按 6 段时间线走完从暑期录取到大一整年；按 8 个主题查询任何生活、学业、办事问题；也可以直接向 AI 提问。
           </p>
           <div className="hero-actions">
             <Link className="primary-button" href="/guide">
-              查看入学指南
+              按时间线阅读
             </Link>
             <Link className="secondary-button" href="/library">
-              浏览资料库
+              按主题浏览
             </Link>
+          </div>
+          <div className="hero-highlights" aria-label="指南特点">
+            <span>民间整理 · 非官方</span>
+            <span>可跳转查看全文</span>
+            <span>找不到就问 AI</span>
           </div>
         </div>
         <AskPanel />
@@ -27,39 +58,125 @@ export default function HomePage() {
       <section className="section">
         <div className="section-heading">
           <div>
-            <span className="eyebrow">入学路线</span>
-            <h2 style={{ marginTop: 10 }}>四个模块，覆盖从报到到学习起步</h2>
+            <span className="eyebrow">时间线</span>
+            <h2 style={{ marginTop: 10 }}>6 段时间线，一步步来</h2>
           </div>
           <Link className="secondary-button" href="/guide">
-            全部指南
+            全部时间线
           </Link>
         </div>
-        <div className="grid grid-4">
-          {guideModules.map((module, index) => (
-            <article className="route-card" key={module.slug}>
-              <span className="route-index">{index + 1}</span>
-              <h3 style={{ marginTop: 14 }}>{module.title}</h3>
-              <p>{module.summary}</p>
-              <div className="tag-list">
-                {module.highlights.map((tag) => (
-                  <span className="tag" key={tag}>{tag}</span>
-                ))}
-              </div>
-            </article>
-          ))}
+        <div className="grid grid-3">
+          {phases.map((phase) => {
+            const count = getDocumentsByPhase(phase.slug).length;
+            return (
+              <article className="module-card clickable-card" key={phase.slug}>
+                <Link
+                  aria-label={`查看${phase.title}`}
+                  className="card-overlay-link"
+                  href={getPhaseHref(phase.slug)}
+                />
+                <span className="status-pill">阶段 {phase.order}</span>
+                <h3 style={{ marginTop: 10 }}>
+                  <Link href={getPhaseHref(phase.slug)}>{phase.title}</Link>
+                </h3>
+                <p>
+                  <strong>{phase.when}</strong>
+                </p>
+                <p>{phase.intro}</p>
+                <div className="tag-list">
+                  <span className="tag">{count} 篇资料</span>
+                </div>
+              </article>
+            );
+          })}
         </div>
       </section>
 
       <section className="section">
         <div className="section-heading">
           <div>
-            <span className="eyebrow">咨询入口</span>
-            <h2 style={{ marginTop: 10 }}>找不到答案，就先找到人</h2>
+            <span className="eyebrow">主题</span>
+            <h2 style={{ marginTop: 10 }}>8 个主题入口</h2>
           </div>
+          <Link className="secondary-button" href="/library">
+            打开资料库
+          </Link>
+        </div>
+        <div className="grid grid-4">
+          {sections.map((section) => {
+            const count = getDocumentsByPrimarySection(section.slug).length;
+            return (
+              <article className="library-card clickable-card" key={section.slug}>
+                <Link
+                  aria-label={`查看${section.title}`}
+                  className="card-overlay-link"
+                  href={getSectionHref(section.slug)}
+                />
+                <span className="status-pill">
+                  {section.emoji ? <>{section.emoji} </> : null}
+                  {section.title}
+                </span>
+                <h3 style={{ marginTop: 12 }}>
+                  <Link href={getSectionHref(section.slug)}>{section.title}</Link>
+                </h3>
+                <p>{section.description}</p>
+                <div className="tag-list">
+                  <span className="tag">{count} 篇</span>
+                </div>
+              </article>
+            );
+          })}
+        </div>
+      </section>
+
+      {qaDocs.length > 0 ? (
+        <section className="section">
+          <div className="section-heading">
+            <div>
+              <span className="eyebrow">高频问答</span>
+              <h2 style={{ marginTop: 10 }}>先看这几个 Q&amp;A</h2>
+            </div>
+            <Link className="secondary-button" href="/qa">
+              全部问答
+            </Link>
+          </div>
+          <div className="grid grid-4">
+            {qaDocs.map((doc) => (
+              <article className="library-card clickable-card" key={doc.slug}>
+                <Link
+                  aria-label={`查看${doc.title}`}
+                  className="card-overlay-link"
+                  href={getDocumentHref(doc.slug)}
+                />
+                <span className="status-pill">Q&amp;A</span>
+                <h3 style={{ marginTop: 12 }}>
+                  <Link href={getDocumentHref(doc.slug)}>{doc.title}</Link>
+                </h3>
+                <p>{cleanExcerpt(doc.excerpt)}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+      ) : null}
+
+      <section className="section">
+        <div className="section-heading">
+          <div>
+            <span className="eyebrow">咨询入口</span>
+            <h2 style={{ marginTop: 10 }}>找不到答案，就先找到能帮你的人</h2>
+          </div>
+          <Link className="secondary-button" href="/about#announce">
+            查看完整公告栏
+          </Link>
         </div>
         <div className="grid grid-3">
-          {contacts.map((item) => (
-            <article className="info-card contact-card" key={item.label}>
+          {contactCards.map((item) => (
+            <article className="info-card contact-card clickable-card" key={item.label}>
+              <Link
+                aria-label={`查看${item.label}`}
+                className="card-overlay-link"
+                href="/about#announce"
+              />
               {item.type === "qr" ? <div className="qr-placeholder">{item.placeholder}</div> : null}
               <h3>{item.label}</h3>
               <p style={{ color: "var(--text)", fontWeight: 700 }}>{item.value}</p>

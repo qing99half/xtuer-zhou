@@ -35,3 +35,8 @@ Thumbs.db
 # temporary files
 *.tmp
 *.temp
+
+# playwright / test artifacts
+.playwright-mcp/
+mobile-*.png
+page-*.png

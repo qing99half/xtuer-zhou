@@ -6,35 +6,141 @@ export type ContactItem = {
   placeholder: string;
 };
 
-export type GuideModule = {
+export type Section = {
   slug: string;
   title: string;
-  summary: string;
-  questions: string[];
-  highlights: string[];
+  emoji?: string;
+  description: string;
+  order: number;
 };
 
-export type LibraryCategory = {
-  path: string;
+export type Phase = {
+  slug: string;
   title: string;
-  description: string;
-  status: "已审核" | "待整理";
+  when: string;
+  intro: string;
+  order: number;
 };
+
+export const sections: Section[] = [
+  {
+    slug: "newcomer",
+    title: "你好，新同学",
+    description: "报到 / 军训 / 迎新的关键路径。",
+    order: 1,
+  },
+  {
+    slug: "study",
+    title: "学在湘大",
+    description: "选课、培养方案、保研、考证等学业主线。",
+    order: 2,
+  },
+  {
+    slug: "life",
+    title: "校园生活",
+    description: "宿舍、快递、餐饮、出行、医保等日常。",
+    order: 3,
+  },
+  {
+    slug: "campus",
+    title: "湘大印象",
+    description: "校史、校园文化、地图、院系介绍。",
+    order: 4,
+  },
+  {
+    slug: "tools",
+    title: "办事与工具",
+    description: "信息门户、VPN、一卡通、缴费与办事流程。",
+    order: 5,
+  },
+  {
+    slug: "clubs",
+    title: "湘大社团",
+    emoji: "🎉",
+    description: "学术、公益、体育等 7 类兴趣社团。",
+    order: 6,
+  },
+  {
+    slug: "orgs",
+    title: "组织与工作",
+    description: "班委、学生会、艺术团、社联、研会。",
+    order: 7,
+  },
+  {
+    slug: "card",
+    title: "校园卡专栏",
+    description: "校园卡使用与常见问题。",
+    order: 8,
+  },
+];
+
+export const phases: Phase[] = [
+  {
+    slug: "pre-arrival",
+    title: "暑期录取后",
+    when: "报到前 30–60 天",
+    intro: "确认专业、办贷款、准备物品。",
+    order: 1,
+  },
+  {
+    slug: "arrival",
+    title: "报到当天",
+    when: "9 月初",
+    intro: "到校 · 报到点 · 宿舍 · 一卡通。",
+    order: 2,
+  },
+  {
+    slug: "first-week",
+    title: "开学第一周",
+    when: "报到后 1–7 天",
+    intro: "信息门户 / 教务 / 网络 / 快递。",
+    order: 3,
+  },
+  {
+    slug: "training",
+    title: "军训期",
+    when: "开学 3–4 周",
+    intro: "军训 · 医保 · 饮食 · 健康。",
+    order: 4,
+  },
+  {
+    slug: "first-term",
+    title: "军训后学业",
+    when: "第一学期",
+    intro: "作息 · 选课 · 图书馆 · 班委社团。",
+    order: 5,
+  },
+  {
+    slug: "first-year",
+    title: "大一持续",
+    when: "整个大一",
+    intro: "考证 · 转专业 · 保研认知 · 假期出行。",
+    order: 6,
+  },
+];
+
+export function getSectionBySlug(slug: string): Section | undefined {
+  return sections.find((section) => section.slug === slug);
+}
+
+export function getPhaseBySlug(slug: string): Phase | undefined {
+  return phases.find((phase) => phase.slug === slug);
+}
 
 export const contacts: ContactItem[] = [
   {
     label: "交流群微信二维码",
-    value: "二维码占位",
-    note: "后续用于展示新生交流群微信二维码，当前先保留占位。",
+    value: "二维码即将补充",
+    note: "后续会放在这里，方便新生快速加入交流群。",
     type: "qr",
-    placeholder: "微信群二维码待补充",
+    placeholder: "微信群二维码即将补充",
   },
   {
     label: "联系人微信二维码",
-    value: "二维码占位",
-    note: "后续用于展示联系人微信二维码，方便咨询和资料补充。",
+    value: "二维码即将补充",
+    note: "如果指南里暂时没有答案，可以扫码添加学长学姐微信，直接问 / 获取更详细的内容。",
     type: "qr",
-    placeholder: "联系人二维码待补充",
+    placeholder: "联系人二维码即将补充",
   },
   {
     label: "QQ 新生群",
@@ -46,78 +152,8 @@ export const contacts: ContactItem[] = [
   {
     label: "湘大表白墙",
     value: "待补充最终入口",
-    note: "用于补充咨询、投稿和校园信息流转。",
+    note: "用于日常咨询、投稿和校园信息流转。",
     type: "link",
     placeholder: "入口待补充",
-  },
-];
-
-export const guideModules: GuideModule[] = [
-  {
-    slug: "registration",
-    title: "报到流程",
-    summary: "从录取后准备、到校交通、现场报到到入校第一天，帮新生把关键路径走顺。",
-    questions: ["什么时候来校？", "报到要带什么？", "到校后先去哪里？"],
-    highlights: ["迎新日程", "材料清单", "到校路线"],
-  },
-  {
-    slug: "dorm-life",
-    title: "宿舍生活",
-    summary: "围绕住宿、生活用品、校园卡、水电空调、快递等高频问题做统一整理。",
-    questions: ["宿舍需要准备什么？", "快递在哪里取？", "水电空调怎么处理？"],
-    highlights: ["寝室生活", "快递驿站", "校园一卡通"],
-  },
-  {
-    slug: "military-training",
-    title: "军训指南",
-    summary: "整理军训安排、物资准备、注意事项和请假经验，降低新生入学焦虑。",
-    questions: ["军训要准备什么？", "有哪些注意事项？", "身体不适怎么办？"],
-    highlights: ["物资准备", "训练提醒", "请假说明"],
-  },
-  {
-    slug: "study-start",
-    title: "学习入门",
-    summary: "覆盖教务系统、选课、培养方案、课程表、学分和常用学习平台。",
-    questions: ["怎么选课？", "培养方案怎么看？", "图书馆和自习室怎么用？"],
-    highlights: ["湘大教务", "选课通识课", "图书馆自习"],
-  },
-];
-
-export const libraryCategories: LibraryCategory[] = [
-  {
-    path: "docs/00-知识库说明",
-    title: "知识库说明",
-    description: "项目定位、资料来源、审核规则与使用方式。",
-    status: "已审核",
-  },
-  {
-    path: "docs/01-新生入学",
-    title: "新生入学",
-    description: "报到流程、宿舍生活、军训指南、学习入门等第一版重点内容。",
-    status: "已审核",
-  },
-  {
-    path: "docs/02-课程学习",
-    title: "课程学习",
-    description: "选课、培养方案、课程考核、图书馆与自习资源。",
-    status: "已审核",
-  },
-  {
-    path: "docs/04-学院专业",
-    title: "学院专业",
-    description: "学校简介、校园文化、院系专业、地图和校园照片资料。",
-    status: "已审核",
-  },
-  {
-    path: "docs/05-校园生活",
-    title: "校园生活",
-    description: "快递、运动、餐饮、出行、医保就医、社团组织等校园生活资料。",
-    status: "已审核",
-  },
-  {
-    path: "docs/07-资源工具",
-    title: "资源工具",
-    description: "信息门户、校园网、VPN、一卡通、线上缴费和故障申报。",
-    status: "已审核",
   },
 ];

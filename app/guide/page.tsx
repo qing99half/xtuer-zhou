@@ -1,51 +1,55 @@
-import { guideModules } from "@/lib/site-data";
+import Link from "next/link";
+import { getDocumentsByPhase } from "@/lib/markdown";
+import { getPhaseHref } from "@/lib/routes";
+import { phases } from "@/lib/site-data";
 
 export default function GuidePage() {
   return (
     <>
+      <nav aria-label="面包屑" className="breadcrumb">
+        <Link href="/">首页</Link>
+        <span aria-hidden="true"> › </span>
+        <span aria-current="page">新生指南</span>
+      </nav>
+
       <section className="section" style={{ marginTop: 0 }}>
-        <span className="eyebrow">入学指南</span>
-        <h1>统一模板整理四个新生核心模块</h1>
+        <span className="eyebrow">按时间线阅读</span>
+        <h1>新生入学 6 段时间线</h1>
         <p>
-          当前页面先完成信息架构骨架。正式内容需要从待整理资料中拆分，经用户审核后再写入对应模块。
+          从暑期收到录取通知，到大一整个学年，按 6 个阶段一步步来。每个阶段的卡片可以点开，展开该阶段推荐阅读的资料。
         </p>
       </section>
 
       <section className="section">
-        <div className="grid">
-          {guideModules.map((module) => (
-            <article className="module-card" key={module.slug}>
-              <div className="section-heading" style={{ marginBottom: 0 }}>
-                <div>
-                  <span className="status-pill">统一模板</span>
-                  <h2 style={{ marginTop: 10 }}>{module.title}</h2>
+        <div className="grid grid-3">
+          {phases.map((phase) => {
+            const docs = getDocumentsByPhase(phase.slug);
+            return (
+              <article className="module-card clickable-card" key={phase.slug}>
+                <Link
+                  aria-label={`查看${phase.title}`}
+                  className="card-overlay-link"
+                  href={getPhaseHref(phase.slug)}
+                />
+                <span className="status-pill">阶段 {phase.order}</span>
+                <h2 style={{ marginTop: 10 }}>
+                  <Link href={getPhaseHref(phase.slug)}>{phase.title}</Link>
+                </h2>
+                <p>
+                  <strong>{phase.when}</strong>
+                </p>
+                <p>{phase.intro}</p>
+                <div className="tag-list">
+                  <span className="tag">{docs.length} 篇资料</span>
                 </div>
-                <span className="tag">待审核内容填充</span>
-              </div>
-              <p>{module.summary}</p>
-              <div className="grid grid-3" style={{ marginTop: 16 }}>
-                <div className="empty-state">
-                  <h3>核心问题</h3>
-                  {module.questions.map((question) => (
-                    <p key={question}>· {question}</p>
-                  ))}
+                <div className="card-actions">
+                  <Link className="secondary-button" href={getPhaseHref(phase.slug)}>
+                    查看这一阶段
+                  </Link>
                 </div>
-                <div className="empty-state">
-                  <h3>长文指南</h3>
-                  <p>等待从已审核 Markdown 资料中写入正文，保持段落短小、标题清晰。</p>
-                </div>
-                <div className="empty-state">
-                  <h3>引用来源</h3>
-                  <p>后续展示资料来源、更新时间，并为 RAG 句子级引用做准备。</p>
-                </div>
-              </div>
-              <div className="tag-list">
-                {module.highlights.map((tag) => (
-                  <span className="tag" key={tag}>{tag}</span>
-                ))}
-              </div>
-            </article>
-          ))}
+              </article>
+            );
+          })}
         </div>
       </section>
     </>

@@ -23,7 +23,7 @@ export function ContactDialog() {
               <div>
                 <span className="eyebrow">联系方式</span>
                 <h2 style={{ marginTop: 10 }}>加群咨询 / 联系我们</h2>
-                <p>第一版使用弹窗集中展示入口，后续素材确认后替换占位内容。</p>
+                <p>常见问题可以先看指南；没找到答案的话，可以扫码直接问学长学姐，或到新生群里提问。</p>
               </div>
               <button aria-label="关闭联系方式弹窗" className="icon-button" type="button" onClick={() => setOpen(false)}>
                 ×
@@ -40,7 +40,7 @@ export function ContactDialog() {
               ))}
             </div>
             <p style={{ marginBottom: 0 }}>
-              提醒：群聊信息复杂，请以学校官方通知和已审核资料为准，谨防诈骗。
+              提醒：群聊信息复杂，请以学校官方通知和指南内容为准，谨防诈骗。
             </p>
           </section>
         </div>

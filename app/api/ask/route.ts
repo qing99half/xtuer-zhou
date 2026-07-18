@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { polishAnswerWithDeepSeek } from "@/lib/deepseek";
 import { searchRag } from "@/lib/rag";
 
 export async function POST(request: Request) {
@@ -16,5 +17,16 @@ export async function POST(request: Request) {
     );
   }
 
-  return NextResponse.json(searchRag(question));
+  const result = searchRag(question);
+
+  if (!result.covered) {
+    return NextResponse.json(result);
+  }
+
+  const polishedAnswer = await polishAnswerWithDeepSeek(question, result.sources).catch(() => null);
+
+  return NextResponse.json({
+    ...result,
+    answer: polishedAnswer ?? result.answer,
+  });
 }

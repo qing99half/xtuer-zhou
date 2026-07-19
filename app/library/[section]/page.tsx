@@ -82,8 +82,8 @@ export default async function SectionPage({ params }: SectionPageProps) {
           </div>
         ) : (
           <div className="empty-state">
-            <h3>本主题暂无资料</h3>
-            <p>后续会补充这个方向的内容，欢迎通过加群咨询提供你想看的话题。</p>
+            <h3>本主题资料尚未整理完全</h3>
+            <p>需要这方面的资料，请到<Link href="/about#announce">公告栏</Link>添加下方学长微信联系方式即可获取。</p>
           </div>
         )}
       </section>

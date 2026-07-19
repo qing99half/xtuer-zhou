@@ -36,6 +36,9 @@ Thumbs.db
 *.tmp
 *.temp
 
+# typescript build info
+tsconfig.tsbuildinfo
+
 # playwright / test artifacts
 .playwright-mcp/
 mobile-*.png

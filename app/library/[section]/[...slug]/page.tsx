@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { notFound } from "next/navigation";
@@ -336,40 +337,35 @@ export default async function DocumentPage({ params, searchParams }: DocumentPag
       {document.completeness === "partial" ? (
         <section className="section supplement-section">
           <div className="supplement-card">
-            <span className="eyebrow">补充信息</span>
-            <h2 style={{ marginTop: 10 }}>想要更完整的信息？可以这样获取</h2>
+            <span className="eyebrow">资料获取</span>
+            <h2 style={{ marginTop: 10 }}>资料尚未整理完全，添加下方联系方式即可获取</h2>
             <p>
               {document.completenessNote ||
-                "本页只覆盖了部分要点。涉及图片、附件、时效性政策或最新流程的内容，可能会随年度调整。以下三条路能帮你拿到更完整、更新的第一手信息。"}
+                "本页只覆盖了部分要点。想要更完整的资料，直接添加下方任一联系方式即可获取。"}
+            </p>
+            <p className="muted">
+              提醒：微信新生群需先添加学长微信后由学长邀请进入，以防不法分子混入。
             </p>
             <div className="supplement-paths">
               {contacts
-                .filter((contact) => contact.type === "qr" && contact.label.includes("联系人"))
+                .filter((contact) => contact.type === "qr")
                 .map((contact) => (
                   <div className="supplement-path" key={contact.label}>
-                    <div className="qr-placeholder">{contact.placeholder}</div>
-                    <strong>加学长学姐微信</strong>
-                    <p>直接问一线在校生，最快拿到当年细节。</p>
+                    {contact.image ? (
+                      <div className="qr-image">
+                        <Image
+                          alt={contact.imageAlt ?? contact.label}
+                          height={160}
+                          src={contact.image}
+                          width={160}
+                        />
+                      </div>
+                    ) : null}
+                    <strong>{contact.label}</strong>
+                    <p>{contact.note}</p>
                   </div>
                 ))}
-              {contacts
-                .filter((contact) => contact.type === "group")
-                .map((contact) => (
-                  <div className="supplement-path" key={contact.label}>
-                    <div className="qr-placeholder" aria-hidden="true">QQ 群号</div>
-                    <strong>加入 {contact.label}</strong>
-                    <p>群号 {contact.value}，同批新生一起提问、讨论。</p>
-                  </div>
-                ))}
-              <div className="supplement-path">
-                <div className="qr-placeholder" aria-hidden="true">官方来源</div>
-                <strong>学校官方渠道</strong>
-                <p>教务处、学工部、你所在学院的公众号与官网——以最新通知为准。</p>
-              </div>
             </div>
-            <p className="muted" style={{ marginBottom: 0 }}>
-              如果你手里恰好有能补充的资料（本年度通知、截图、亲身经验），也欢迎顺手加群反馈，帮下一位新生。
-            </p>
           </div>
         </section>
       ) : null}

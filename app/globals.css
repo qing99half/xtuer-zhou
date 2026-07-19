@@ -463,6 +463,25 @@ p {
   text-align: center;
 }
 
+.qr-image {
+  display: grid;
+  place-items: center;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+}
+
+.qr-image img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: 220px;
+  aspect-ratio: 1 / 1;
+  object-fit: contain;
+  border-radius: 6px;
+}
+
 .route-index {
   display: inline-grid;
   width: 34px;
@@ -812,6 +831,14 @@ p {
 
 .supplement-path .qr-placeholder {
   min-height: 96px;
+}
+
+.supplement-path .qr-image {
+  padding: 8px;
+}
+
+.supplement-path .qr-image img {
+  max-width: 160px;
 }
 
 .supplement-path strong {

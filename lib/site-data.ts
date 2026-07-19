@@ -3,7 +3,8 @@ export type ContactItem = {
   value: string;
   note: string;
   type: "qr" | "group" | "link";
-  placeholder: string;
+  image?: string;
+  imageAlt?: string;
 };
 
 export type Section = {
@@ -129,31 +130,19 @@ export function getPhaseBySlug(slug: string): Phase | undefined {
 
 export const contacts: ContactItem[] = [
   {
-    label: "交流群微信二维码",
-    value: "二维码即将补充",
-    note: "后续会放在这里，方便新生快速加入交流群。",
+    label: "学长微信二维码",
+    value: "扫码添加学长微信",
+    note: "指南里暂时没有的资料，添加学长微信即可获取。同时，微信新生群需要先添加学长微信后再由学长邀请进入，避免不法分子混入。",
     type: "qr",
-    placeholder: "微信群二维码即将补充",
+    image: "/qr/senior-wechat.png",
+    imageAlt: "学长微信二维码",
   },
   {
-    label: "联系人微信二维码",
-    value: "二维码即将补充",
-    note: "如果指南里暂时没有答案，可以扫码添加学长学姐微信，直接问 / 获取更详细的内容。",
+    label: "QQ 新生群二维码",
+    value: "扫码进入 QQ 新生群",
+    note: "民间自建交流群，同批新生一起提问讨论；群内信息请自行甄别。",
     type: "qr",
-    placeholder: "联系人二维码即将补充",
-  },
-  {
-    label: "QQ 新生群",
-    value: "1101939293",
-    note: "民间自建交流群，群内信息需要自行甄别。",
-    type: "group",
-    placeholder: "QQ 群号",
-  },
-  {
-    label: "湘大表白墙",
-    value: "待补充最终入口",
-    note: "用于日常咨询、投稿和校园信息流转。",
-    type: "link",
-    placeholder: "入口待补充",
+    image: "/qr/qq-group.png",
+    imageAlt: "QQ 新生群二维码",
   },
 ];

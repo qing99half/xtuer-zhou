@@ -81,8 +81,8 @@ export default async function PhasePage({ params }: PhasePageProps) {
           </div>
         ) : (
           <div className="empty-state">
-            <h3>本阶段暂无绑定资料</h3>
-            <p>后续会持续补充。可以先看看其他阶段或到资料库按主题浏览。</p>
+            <h3>本阶段资料尚未整理完全</h3>
+            <p>需要这方面的资料，请到<Link href="/about#announce">公告栏</Link>添加下方学长微信联系方式即可获取。</p>
           </div>
         )}
       </section>

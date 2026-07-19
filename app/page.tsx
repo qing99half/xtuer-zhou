@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { AskPanel } from "@/components/ask-panel";
 import { cleanExcerpt } from "@/lib/display";
@@ -19,7 +20,7 @@ export default function HomePage() {
     )
     .slice(0, 4);
 
-  const contactCards = contacts.slice(0, 3);
+  const contactCards = contacts;
 
   return (
     <>
@@ -163,12 +164,15 @@ export default function HomePage() {
         <div className="section-heading">
           <div>
             <span className="eyebrow">咨询入口</span>
-            <h2 style={{ marginTop: 10 }}>找不到答案，就先找到能帮你的人</h2>
+            <h2 style={{ marginTop: 10 }}>资料不齐？添加联系方式即可获取</h2>
           </div>
           <Link className="secondary-button" href="/about#announce">
             查看完整公告栏
           </Link>
         </div>
+        <p style={{ marginTop: -8 }}>
+          指南里暂未整理完全的资料，添加下方任一联系方式即可获取。微信新生群需先添加学长微信后由学长邀请进入，以防不法分子混入。
+        </p>
         <div className="grid grid-3">
           {contactCards.map((item) => (
             <article className="info-card contact-card clickable-card" key={item.label}>
@@ -177,7 +181,16 @@ export default function HomePage() {
                 className="card-overlay-link"
                 href="/about#announce"
               />
-              {item.type === "qr" ? <div className="qr-placeholder">{item.placeholder}</div> : null}
+              {item.type === "qr" && item.image ? (
+                <div className="qr-image">
+                  <Image
+                    alt={item.imageAlt ?? item.label}
+                    height={220}
+                    src={item.image}
+                    width={220}
+                  />
+                </div>
+              ) : null}
               <h3>{item.label}</h3>
               <p style={{ color: "var(--text)", fontWeight: 700 }}>{item.value}</p>
               <p>{item.note}</p>

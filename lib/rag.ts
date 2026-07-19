@@ -67,7 +67,7 @@ export function searchRag(question: string): RagAnswer {
   if (!question.trim() || queryTokens.length === 0 || chunks.length === 0) {
     return {
       covered: false,
-      answer: "这个问题暂时还没整理进指南。你可以换一种问法，或通过加群咨询补充信息。",
+      answer: "这个问题的资料尚未整理完全，添加公告栏中的学长微信联系方式即可获取。",
       sources: [],
     };
   }

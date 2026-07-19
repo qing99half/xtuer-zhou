@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { contacts } from "@/lib/site-data";
 
@@ -46,8 +47,8 @@ export default function AboutPage() {
             请在做任何重要决定前，以学校官方通知（招生网、教务处、学工部、各学院公众号）为准。
           </p>
           <p>
-            如果你在浏览过程中发现内容不准、想要更完整的信息，或者手里有资料想帮忙补充，
-            都可以通过右上角的 “加群咨询” 找到学长学姐微信或新生 QQ 群。
+            如果你在浏览过程中发现内容还没覆盖，或者想拿到更完整的资料，添加下方公告栏中的学长微信即可获取；
+            微信新生群需先添加学长微信后由学长邀请进入，以防不法分子混入。
           </p>
         </div>
       </section>
@@ -56,13 +57,25 @@ export default function AboutPage() {
         <div className="section-heading">
           <div>
             <span className="eyebrow">公告栏</span>
-            <h2 style={{ marginTop: 10 }}>找到能帮你的人 / 群</h2>
+            <h2 style={{ marginTop: 10 }}>添加联系方式获取资料</h2>
           </div>
         </div>
+        <p style={{ marginTop: -8 }}>
+          资料尚未整理完全，添加下方任一联系方式即可获取。微信新生群需先添加学长微信后由学长邀请进入，以防不法分子混入。
+        </p>
         <div className="grid grid-3">
           {contacts.map((item) => (
             <article className="info-card contact-card" key={item.label}>
-              {item.type === "qr" ? <div className="qr-placeholder">{item.placeholder}</div> : null}
+              {item.type === "qr" && item.image ? (
+                <div className="qr-image">
+                  <Image
+                    alt={item.imageAlt ?? item.label}
+                    height={220}
+                    src={item.image}
+                    width={220}
+                  />
+                </div>
+              ) : null}
               <h3>{item.label}</h3>
               <p style={{ color: "var(--text)", fontWeight: 700 }}>{item.value}</p>
               <p>{item.note}</p>
@@ -141,7 +154,7 @@ export default function AboutPage() {
           <p>但小册子容量有限，还有太多情绪、太多细碎的共鸣，无法通过文字传递。</p>
           <p>
             为此我们在微信上留了一个入口——通过右上角的 “加群咨询” 或 <Link href="#announce">公告栏</Link>
-            添加学长学姐微信，你可以在那里找到：
+            添加学长微信，你可以在那里找到：
           </p>
           <ul className="document-list">
             <li>迟迟拿不定主意的选课困惑</li>
